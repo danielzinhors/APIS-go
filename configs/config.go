@@ -28,11 +28,11 @@ func LoadConfig(path string) (*conf, error) {
 	viper.AutomaticEnv()
 	err := viper.ReadInConfig()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	err = viper.Unmarshal(&cfg)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	cfg.TokenAuth = jwtauth.New("HS256", []byte(cfg.JWTSecret), nil)
 	return cfg, err
