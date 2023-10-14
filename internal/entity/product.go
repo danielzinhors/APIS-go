@@ -4,7 +4,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/danielzinhors/APIS-go/internal/entity"
 	"github.com/danielzinhors/APIS-go/pkg/entity"
 )
 
@@ -20,10 +19,10 @@ type Product struct {
 	ID        entity.ID `json:"id"`
 	Name      string    `json:"name"`
 	Price     int       `json:"price"`
-	CreatedAt time.time `json:"created_at"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
-func NweProduct(name string, price int) (*Product, error) {
+func NewProduct(name string, price int) (*Product, error) {
 	product := &Product{
 		ID:        entity.NewID(),
 		Name:      name,
@@ -41,7 +40,7 @@ func (p *Product) Validate() error {
 	if p.ID.String() == "" {
 		return ErrIDIsRequired
 	}
-	if _, err := entity.ParseID(p.ID.String()); err != nil {
+	if _, err := entity.ParseId(p.ID.String()); err != nil {
 		return ErrInvalidID
 	}
 	if p.Name == "" {
@@ -53,4 +52,5 @@ func (p *Product) Validate() error {
 	if p.Price < 0 {
 		return ErrInvalidPrice
 	}
+	return nil
 }
