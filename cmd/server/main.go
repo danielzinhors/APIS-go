@@ -7,6 +7,8 @@ import (
 	"github.com/danielzinhors/APIS-go/internal/entity"
 	"github.com/danielzinhors/APIS-go/internal/infra/database"
 	"github.com/danielzinhors/APIS-go/internal/infra/webservers/handlers"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -23,6 +25,9 @@ func main() {
 	db.AutoMigrate(&entity.Product{}, &entity.User{})
 	productDb := database.NewProduct(db)
 	productHandler := handlers.NewProductHanbler(productDb)
-	http.HandleFunc("/products", productHandler.CreateProduct)
-	http.ListenAndServe(":8000", nil)
+	//http.HandleFunc("/products", productHandler.CreateProduct) router go interno
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
+	r.Post("/products", productHandler.CreateProduct)
+	http.ListenAndServe(":8000", r)
 }
