@@ -26,6 +26,8 @@ func main() {
 	productDb := database.NewProduct(db)
 	productHandler := handlers.NewProductHanbler(productDb)
 	//http.HandleFunc("/products", productHandler.CreateProduct) router go interno
+	userDb := database.NewUser(db)
+	userHandler := handlers.NewUserHanbler(userDb)
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Post("/products", productHandler.CreateProduct)
@@ -33,5 +35,8 @@ func main() {
 	r.Get("/products/{id}", productHandler.GetProduct)
 	r.Put("/products/{id}", productHandler.UpdateProduct)
 	r.Delete("/products/{id}", productHandler.DeleteProduct)
+
+	r.Post("/users", userHandler.CreateUser)
+
 	http.ListenAndServe(":8000", r)
 }
