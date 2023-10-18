@@ -31,7 +31,8 @@ func main() {
 	userHandler := handlers.NewUserHanbler(userDb, configs.TokenAuth, configs.JwtExperesIn)
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
-
+	r.Use(middleware.Recoverer)
+	//r.Use(LogRequest)
 	r.Route("/products", func(r chi.Router) {
 		r.Use(jwtauth.Verifier(configs.TokenAuth))
 		r.Use(jwtauth.Authenticator)
@@ -46,3 +47,12 @@ func main() {
 	r.Post("/users/generate_token", userHandler.GetJWT)
 	http.ListenAndServe(":8000", r)
 }
+
+// Criando um middleware
+// func LogRequest(next http.Handler) http.Handler {
+// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+// 		//r.Context().Value("user")
+// 		log.Printf("Request: %s %s", r.Method, r.URL.Path)
+// 		next.ServeHTTP(w, r)
+// 	})
+// }
